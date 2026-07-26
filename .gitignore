@@ -1,0 +1,13 @@
+# Sensitive data
+data/cookies.txt
+data/cookies_*.txt
+data/archiver.db*
+data/channelhoarder.db
+data/pot-server.log
+
+# Cache files
+data/ytdlp-cache/
+
+# OS files
+.DS_Store
+*~

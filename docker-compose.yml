@@ -1,0 +1,30 @@
+services:
+  channelhoarder:
+    image: ghcr.io/sworcery/channelhoarder:latest
+    container_name: channelhoarder
+    restart: unless-stopped
+    ports:
+      - "8587:8000"
+    volumes:
+      - ./data:/config
+      - ./data/cookies.txt:/cookies/cookies.txt
+      - /mnt/media/videos:/downloads
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:////config/archiver.db
+      - CH_COOKIE_MODE=full
+      - CH_POT_SERVER_ENABLED=true
+      - POT_SERVER_ENABLED=true
+      - CH_MAX_VIDEO_DOWNLOAD_AGE_DAYS=30
+      - CH_DOWNLOAD_COOLDOWN_SECONDS=10
+      - CH_DOWNLOAD_CONCURRENCY=2
+      - CH_DOWNLOAD_RATE_LIMIT=1
+      - CH_DOWNLOAD_JITTER=0.5
+      - CH_USER_AGENT=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+      - CH_YTDLP_PLAYER_CLIENT=default
+      - CH_YTDLP_REMOTE_COMPONENTS=ejs:github
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8587/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
