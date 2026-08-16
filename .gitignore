@@ -1,12 +1,28 @@
 # Sensitive data
+.env
 data/cookies.txt
 data/cookies_*.txt
+data/youtube_api_key
 data/archiver.db*
 data/channelhoarder.db
 data/pot-server.log
 
+# Database backups (large, local only)
+backups/
+
+# Runtime logs and state
+*.log
+.download_status_state.json
+.rate_limit_watcher.json
+
+# Local data artifacts
+data/subs_handles.txt
+data/subs_missing.json
+
 # Cache files
 data/ytdlp-cache/
+__pycache__/
+*.pyc
 
 # OS files
 .DS_Store

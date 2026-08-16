@@ -8,20 +8,30 @@ services:
     volumes:
       - ./data:/config
       - ./data/cookies.txt:/cookies/cookies.txt
+      - ./data/ytdlp_service.py:/app/app/services/ytdlp_service.py
+      - ./data/schemas.py:/app/app/schemas.py
+      - ./data/channel_service.py:/app/app/services/channel_service.py
+      - ./data/download_service.py:/app/app/services/download_service.py
+      - ./data/scan_channels.py:/app/app/tasks/scan_channels.py
+      - ./data/scan_schedule.py:/app/app/utils/scan_schedule.py
       - /mnt/media/videos:/downloads
     environment:
       - DATABASE_URL=sqlite+aiosqlite:////config/archiver.db
       - CH_COOKIE_MODE=full
-      - CH_POT_SERVER_ENABLED=true
-      - POT_SERVER_ENABLED=true
+      - CH_POT_SERVER_ENABLED=false
+      - POT_SERVER_ENABLED=false
       - CH_MAX_VIDEO_DOWNLOAD_AGE_DAYS=30
-      - CH_DOWNLOAD_COOLDOWN_SECONDS=10
+      - CH_DOWNLOAD_COOLDOWN_SECONDS=60
       - CH_DOWNLOAD_CONCURRENCY=2
-      - CH_DOWNLOAD_RATE_LIMIT=1
+      - CH_DOWNLOAD_RATE_LIMIT=0.5
+      - CH_DOWNLOAD_SPEED_LIMIT=3M
       - CH_DOWNLOAD_JITTER=0.5
       - CH_USER_AGENT=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
       - CH_YTDLP_PLAYER_CLIENT=default
       - CH_YTDLP_REMOTE_COMPONENTS=ejs:github
+      - CH_TRANSCODE_API_URL=http://100.122.183.33:8766
+      # Token lives in .env (gitignored); see .env.example
+      - CH_TRANSCODE_API_TOKEN=${CH_TRANSCODE_API_TOKEN:?set CH_TRANSCODE_API_TOKEN in .env}
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8587/health"]
       interval: 30s

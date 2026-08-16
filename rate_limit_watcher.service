@@ -1,0 +1,16 @@
+[Unit]
+Description=Auto-pause ChannelHoarder queue on YouTube rate-limit
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/devilke/youtubetoplex
+ExecStart=/usr/bin/python3 /home/devilke/youtubetoplex/rate_limit_watcher.py
+Restart=always
+RestartSec=10
+UMask=0077
+NoNewPrivileges=true
+
+[Install]
+WantedBy=default.target
