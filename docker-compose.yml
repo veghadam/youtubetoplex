@@ -33,7 +33,11 @@ services:
       # Token lives in .env (gitignored); see .env.example
       - CH_TRANSCODE_API_TOKEN=${CH_TRANSCODE_API_TOKEN:?set CH_TRANSCODE_API_TOKEN in .env}
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8587/health"]
+      # Probe the API on the container's own port (8000; 8587 is the host port).
+      # wget is not in the image, so use curl. /health is not a route - it falls
+      # through to the SPA catch-all and returns 200 HTML for any path, so grep for
+      # a known key to prove the API and DB actually answered.
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8000/api/v1/dashboard/stats | grep -q total_channels"]
       interval: 30s
       timeout: 10s
       retries: 3
